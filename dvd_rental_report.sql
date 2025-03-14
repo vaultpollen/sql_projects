@@ -1,5 +1,5 @@
 -- School project. Set of queries to explore the PostgreSQL DVD Rental Database. Used to generate a business report detailing the most loyal customers and information about their purchases and spending totals.
--- Contains a detailed table and a summary table, a function to return the detailed table, a trigger to update the summary table based on changes in the detailed table, and a stored procedure to refresh the tables weekly.
+-- Contains a detailed table and a summary table, a function to return the detailed table, a trigger to update the summary table based on changes in the detailed table, and a stored procedure to refresh the tables.
 
 -- Overview of how many purchases each customer has made
 SELECT * FROM payment
