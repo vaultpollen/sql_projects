@@ -1,4 +1,4 @@
--- School project. Set of queries to explore the PostgreSQL DVD Rental Database. Used to generate a business report detailing the most loyal customers and information about their purchases and spending totals.
+-- Set of queries to explore the PostgreSQL DVD Rental Database. Used to generate a business report detailing the most loyal customers and information about their purchases and spending totals.
 -- Contains a detailed table and a summary table, a function to create the detailed table from a transformation on raw data from the database, a trigger to update the summary table based on changes in the detailed table, and a stored procedure to refresh the tables.
 
 /* Overview of how many purchases each customer has made
@@ -11,13 +11,12 @@ FROM payment
 WHERE customer_id = 1
 GROUP BY customer_id; */
 
---Query to return raw data needed for the detailed section of the report
+/* Query to return raw data needed for the detailed table
 SELECT payment.customer_id, customer.first_name, customer.last_name, customer.email, payment.amount FROM payment
 LEFT JOIN customer ON payment.customer_id = customer.customer_id
-GROUP BY payment.customer_id, customer.first_name, customer.last_name, customer.email, payment.amount;
+GROUP BY payment.customer_id, customer.first_name, customer.last_name, customer.email, payment.amount; */
 
-/* (Detailed table) Query to return the names, email addresses, total purchases, and total amount spent on DVDs for each customer
-Ordered by the customers with the highest total amount spent
+/* Returns the names, email addresses, total purchases, and total amount spent on DVDs for each customer, ordered by the customers with the highest total amount spent
 SELECT customer.first_name, customer.last_name, customer.email, COUNT(payment.customer_id) AS total_purchases, SUM(payment.amount) AS total_amount FROM payment
 LEFT JOIN customer ON payment.customer_id = customer.customer_id
 GROUP BY customer.first_name, customer.last_name, customer.email
@@ -25,7 +24,7 @@ ORDER BY total_amount DESC; */
 
 DROP FUNCTION customer_total();
 
--- (A4) Function to perform data transformation for the detailed table
+-- Function to perform data transformation for the detailed table
 CREATE OR REPLACE FUNCTION customer_total()
 RETURNS TABLE (
 	first_name VARCHAR(45), 
@@ -51,7 +50,7 @@ SELECT * FROM customer_total();
 DROP TABLE detailed_table;
 DROP TABLE summary_table;
 
--- (C) Create detailed and summary tables
+-- Create detailed and summary tables
 CREATE TABLE detailed_table (
 	first_name VARCHAR(45), 
 	last_name VARCHAR(45), 
@@ -93,7 +92,7 @@ AFTER INSERT ON detailed_table
 FOR EACH STATEMENT
 EXECUTE PROCEDURE trigger_function();
 
--- (D) Extract raw data into detailed table
+-- Extract raw data into detailed table using customer_total() function
 INSERT INTO detailed_table
 SELECT * FROM customer_total();
 
@@ -101,16 +100,16 @@ SELECT * FROM customer_total();
 SELECT * FROM detailed_table;
 SELECT * FROM summary_table;
 
--- (E) Confirm summary table update based on new data entered into detailed table
+-- Insert test data into detailed table
 INSERT INTO detailed_table
 VALUES ('Test', 'Name', 'testemail@email.com', 1, 500);
 
--- Show updated tables
+-- Confirm summary table update based on new detailed table data
 SELECT * FROM detailed_table
 ORDER BY total_amount DESC;
 SELECT * FROM summary_table;
 
--- (F) Stored procedure to refresh detailed and summary tables
+-- Stored procedure to refresh detailed and summary tables
 CREATE OR REPLACE PROCEDURE refresh_tables()
 LANGUAGE PLPGSQL
 AS $$
@@ -123,6 +122,7 @@ SELECT * FROM customer_total();
 RETURN;
 END; $$;
 
+-- Run procedure
 CALL refresh_tables()
 
 -- Show updated tables
