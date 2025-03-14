@@ -11,6 +11,11 @@ FROM payment
 WHERE customer_id = 1
 GROUP BY customer_id;
 
+-- Query to return raw data needed for the detailed section of the report
+SELECT payment.customer_id, customer.first_name, customer.last_name, customer.email, payment.amount FROM payment
+LEFT JOIN customer ON payment.customer_id = customer.customer_id
+GROUP BY payment.customer_id, customer.first_name, customer.last_name, customer.email, payment.amount;
+
 -- (Detailed table) Query to return the names, email addresses, total purchases, and total amount spent on DVDs for each customer
 -- Ordered by the customers with the highest total amount spent
 SELECT customer.first_name, customer.last_name, customer.email, COUNT(payment.customer_id) AS total_purchases, SUM(payment.amount) AS total_amount FROM payment
