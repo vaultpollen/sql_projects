@@ -1,4 +1,5 @@
--- Summarized here is a report that will be used to determine the top 10 customers of a DVD rental store based on their highest spending month, ranking them by the largest total amount spent in any single month. The purpose of this report is to provide actionable insights for a customer loyalty program that can be tailored based on the months in which the customers tend to spend the most.
+/* Summarized here is a report that will be used to determine the top 10 customers of a DVD rental store based on their highest spending month, ranking them by the largest total amount spent 
+in any single month. The purpose of this report is to provide actionable insights for a customer loyalty program that can be tailored based on the months in which the customers tend to spend the most.*/
 
 --Raw data needed for the detailed section of the report
 SELECT payment.customer_id, customer.first_name, customer.last_name, customer.email, payment.amount, payment.payment_date FROM payment
@@ -25,7 +26,9 @@ SELECT date_convert(payment_date) FROM payment;
 DROP TABLE detailed_table;
 DROP TABLE summary_table;
 
--- Create detailed and summary tables
+/* The detailed table provides a direct overview of all purchases made in each month by every customer. This data provides a granular scope of transaction level data that provides insights 
+to customer spending habits. The summary table provides key metrics that directly answer the business question: who are the top 10 spending customers and in what months are they spending the most? 
+Customer loyalty programs can be tailored based on the answer to this question.*/
 CREATE TABLE detailed_table (
 	first_name VARCHAR(45), 
 	last_name VARCHAR(45), 
